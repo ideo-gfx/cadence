@@ -6,19 +6,51 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 
 ## Status
 
-- [x] Step 1: Foundation and sign-in (roles: employee, manager, executive; reporting lines)
-- [ ] Step 2: Daily entry screen
-- [ ] Step 3: Manager approval
-- [ ] Step 4: Daily report email + pilot
+- [x] Phase 1: Foundation and sign-in (roles: employee, manager, leadership; reporting lines)
+- [x] Phase 2: Go live (People screen for admins, deploy setup below)
+- [ ] Phase 3: Daily entry
+- [ ] Phase 4: Manager approval
+- [ ] Phase 5: Daily report email and reminders
+- [ ] Phase 6: Pilot with the IDEO Graphics team
+- [ ] Phase 7: Leave tracking and insights
 
-## Setup
+## Go live, step by step
 
-1. Create a free project at supabase.com.
-2. In the Supabase SQL editor, run `supabase/migrations/0001_profiles.sql`.
-3. Supabase > Authentication > URL Configuration: set Site URL to your app URL and add `<app URL>/auth/callback` to Redirect URLs.
-4. Copy `.env.example` to `.env.local` and fill in the values from Supabase > Project Settings > API.
-5. `npm install && npm run dev`, then open http://localhost:3000.
+You need free accounts on Supabase, Vercel and Resend, and access to add DNS records to the email domain.
 
-## Adding people
+### 1. Supabase (database and sign-in)
 
-Sign-in is invite-only. In Supabase > Authentication > Users, click **Invite user** for each person. A profile row is created automatically. Then in Table Editor > `profiles`, set each person's `full_name`, `role` and `manager_id` (the manager's profile id). Tick `is_admin` for whoever manages the team list.
+1. Create a project at supabase.com. Pick the region closest to the team.
+2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, then `0002_…`).
+3. Project Settings > API: copy the **Project URL**, the **anon** key and the **service_role** key. Keep the service_role key secret.
+
+### 2. Resend (email)
+
+1. At resend.com, add the domain you'll send from (for example `yourcompany.com`) and add the DNS records it shows. Wait until it says **Verified**.
+2. Create an API key.
+3. Supabase > Authentication > Emails > SMTP Settings: turn on custom SMTP with
+   host `smtp.resend.com`, port `465`, username `resend`, password = the Resend API key,
+   sender `cadence@yourcompany.com`, sender name `Cadence`.
+   Supabase's built-in sender only allows a few emails an hour, so sign-in links need this.
+
+### 3. Vercel (hosting)
+
+1. At vercel.com, **Add New > Project** and import the `cadence` GitHub repo.
+2. Add these environment variables (values from step 1), then **Deploy**:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `NEXT_PUBLIC_SITE_URL` = the address Vercel gives you, such as `https://cadence-xyz.vercel.app`
+3. Back in Supabase > Authentication > URL Configuration: set **Site URL** to that address and add `<address>/auth/callback` to **Redirect URLs**.
+
+### 4. First admin
+
+1. Supabase > Authentication > Users > **Add user > Create new user**, with your email and **Auto Confirm User** ticked.
+2. Table Editor > `profiles`: fill in your `full_name`, set `role`, and tick `is_admin`.
+3. Open the live site and sign in with your email. You'll see **People** in the header.
+
+From then on, add everyone from the **People** screen: name, email, role and who they report to. They sign in from the login page with their email; there are no passwords. Unticking **Active** blocks someone's sign-in but keeps their history.
+
+## Run locally
+
+Copy `.env.example` to `.env.local`, fill in the values, then `npm install && npm run dev` and open http://localhost:3000.

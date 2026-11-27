@@ -9,6 +9,7 @@ export type Profile = {
   role: Role;
   manager_id: string | null;
   is_admin: boolean;
+  active: boolean;
 };
 
 export async function createClient() {
@@ -37,7 +38,10 @@ export async function getProfile(): Promise<Profile | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
   const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  return (data as Profile) ?? null;
+  const profile = (data as Profile) ?? null;
+  // Deactivated people are treated as signed out.
+  if (profile && profile.active === false) return null;
+  return profile;
 }
 
 export const homeFor: Record<Role, string> = {

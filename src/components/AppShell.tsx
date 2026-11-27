@@ -24,8 +24,12 @@ export function AppShell({
           <Link href="/" className="rounded-md outline-none focus-visible:ring-2 focus-visible:ring-focus">
             <Logo />
           </Link>
-          <nav className="flex items-center gap-1">
-            <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>
+          <nav className="flex min-w-0 items-center gap-1 overflow-x-auto">
+            {profile.role !== "executive" && <NavLink href="/entry">Today</NavLink>}
+            {profile.role !== "employee" && (
+              <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>
+            )}
+            {(profile.is_admin || profile.role === "manager") && <NavLink href="/projects">Projects</NavLink>}
             {profile.is_admin && <NavLink href="/people">People</NavLink>}
           </nav>
           <div className="ml-auto flex items-center gap-3">

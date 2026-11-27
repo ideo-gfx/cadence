@@ -9,7 +9,7 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 - [x] Phase 1: Foundation and sign-in (roles: employee, manager, leadership; reporting lines)
 - [x] Phase 2: Go live (People screen for admins, deploy setup below)
 - [x] Phase 3: Daily entry (run `supabase/migrations/0003_daily_entry.sql` in the Supabase SQL Editor)
-- [ ] Phase 4: Manager approval
+- [x] Phase 4: Manager approval (run `supabase/migrations/0004_approvals.sql`)
 - [ ] Phase 5: Daily report email and reminders
 - [ ] Phase 6: Pilot with the IDEO Graphics team
 - [ ] Phase 7: Leave tracking and insights
@@ -28,7 +28,7 @@ You need free accounts on Supabase, Vercel and Resend, and access to add DNS rec
 ### 1. Supabase (database and sign-in)
 
 1. Create a project at supabase.com. Pick the region closest to the team.
-2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, `0002_…`, `0003_…`). When a new file appears, run just that one.
+2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, `0002_…`, and so on). When a new file appears, run just that one.
 3. Project Settings > API: copy the **Project URL**, the **anon** key and the **service_role** key. Keep the service_role key secret.
 
 ### 2. Resend (email)

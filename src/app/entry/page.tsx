@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
-import { cx } from "@/components/ui";
+import { DayStrip } from "@/components/DayStrip";
 import { createClient, getProfile } from "@/lib/supabase/server";
 import {
   BACKFILL_DAYS,
@@ -101,42 +100,20 @@ export default async function EntryPage({ searchParams }: { searchParams: Promis
       title={date === today ? "Today" : formatDay(date, { weekday: "long", day: "numeric", month: "long" })}
       description="Log what you worked on, with hours. Submit when your day is done."
     >
-      <nav aria-label="Choose a day" className="-mx-1 mb-6 flex gap-1.5 overflow-x-auto px-1 pb-1">
-        {strip.map((d) => {
+      <DayStrip
+        today={today}
+        current={date}
+        days={strip.map((d) => {
           const state = stateByDate.get(d);
-          const active = d === date;
-          return (
-            <Link
-              key={d}
-              href={d === today ? "/entry" : `/entry?date=${d}`}
-              aria-current={active ? "date" : undefined}
-              className={cx(
-                "flex min-w-[4.5rem] shrink-0 flex-col items-center rounded-lg border px-2 py-1.5 text-center transition-colors",
-                "outline-none focus-visible:ring-2 focus-visible:ring-focus",
-                active ? "border-primary bg-primary-light" : "border-line-subtle bg-surface hover:bg-subtle",
-              )}
-            >
-              <span className={cx("text-2xs", active ? "text-primary" : "text-muted")}>
-                {d === today ? "Today" : formatDay(d, { weekday: "short" })}
-              </span>
-              <span className={cx("text-sm font-medium", active ? "text-primary" : "text-fg")}>
-                {formatDay(d, { day: "numeric", month: "short" })}
-              </span>
-              <span
-                className={cx(
-                  "text-2xs",
-                  state === "approved" && "text-success",
-                  state === "returned" && "text-danger",
-                  state === "submitted" && "text-secondary",
-                  (!state || state === "draft") && "text-muted",
-                )}
-              >
-                {state ? dayStateLabel[state] : "Not started"}
-              </span>
-            </Link>
-          );
+          return {
+            date: d,
+            href: d === today ? "/entry" : `/entry?date=${d}`,
+            label: state ? dayStateLabel[state] : "Not started",
+            tone:
+              state === "approved" ? "success" : state === "returned" ? "danger" : state === "submitted" ? "secondary" : "muted",
+          };
         })}
-      </nav>
+      />
 
       <DayForm
         key={`${date}-${day?.state ?? "new"}`}

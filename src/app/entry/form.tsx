@@ -13,6 +13,7 @@ import {
   type DayStatus,
   type TaskStatus,
 } from "@/lib/workday";
+import { TaskList } from "@/components/TaskList";
 import { saveDay, type SaveResult, type TaskInput } from "./actions";
 
 export type Project = { id: string; name: string };
@@ -33,11 +34,11 @@ const emptyTask = (): TaskInput => ({
   blocker: "",
 });
 
-const stateTone: Record<DayState, "neutral" | "primary" | "secondary"> = {
+const stateTone: Record<DayState, "neutral" | "primary" | "secondary" | "success"> = {
   draft: "neutral",
   submitted: "secondary",
   returned: "primary",
-  approved: "secondary",
+  approved: "success",
 };
 
 const totalOf = (tasks: TaskInput[]) => tasks.reduce((sum, t) => sum + (Number(t.hours) || 0), 0);
@@ -89,7 +90,7 @@ export function DayForm({
     <div className="space-y-6">
       {saved?.state === "returned" && (
         <Card className="border-primary/40 bg-primary-light p-4">
-          <p className="text-sm font-medium text-fg">{managerName ?? "Your manager"} sent this day back</p>
+          <p className="text-sm font-medium text-fg">This day was sent back for changes</p>
           {saved.reviewNote && <p className="mt-1 text-sm text-fg-secondary">{saved.reviewNote}</p>}
         </Card>
       )}
@@ -316,21 +317,15 @@ function ReadOnlyDay({
       </Card>
       {saved.tasks.length > 0 && (
         <Card className="overflow-hidden">
-          <ol className="divide-y divide-line-subtle">
-            {saved.tasks.map((t, i) => (
-              <li key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 p-4">
-                <span className="min-w-0 flex-1 text-sm text-fg">{t.description}</span>
-                <span className="text-xs text-muted">
-                  {t.project_id === "other" ? t.project_other : t.project_id ? projectName(t.project_id) : ""}
-                </span>
-                <Badge tone={t.status === "blocked" ? "primary" : "neutral"}>{taskStatusLabel[t.status]}</Badge>
-                <span className="w-12 text-right text-sm font-medium text-fg">{formatHours(Number(t.hours))}</span>
-                {t.status === "blocked" && t.blocker && (
-                  <span className="w-full text-xs text-fg-secondary">Blocked by: {t.blocker}</span>
-                )}
-              </li>
-            ))}
-          </ol>
+          <TaskList
+            tasks={saved.tasks.map((t) => ({
+              description: t.description,
+              project: t.project_id === "other" ? t.project_other : t.project_id ? (projectName(t.project_id) ?? "") : "",
+              hours: Number(t.hours),
+              status: t.status,
+              blocker: t.blocker,
+            }))}
+          />
         </Card>
       )}
       {saved.note && (

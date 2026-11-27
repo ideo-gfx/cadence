@@ -29,6 +29,7 @@ export function AppShell({
             {profile.role !== "employee" && (
               <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>
             )}
+            {profile.role !== "manager" && profile.is_admin && <NavLink href="/team">Team</NavLink>}
             {(profile.is_admin || profile.role === "manager") && <NavLink href="/projects">Projects</NavLink>}
             {profile.is_admin && <NavLink href="/people">People</NavLink>}
           </nav>

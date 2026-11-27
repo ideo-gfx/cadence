@@ -1,32 +1,48 @@
 import Link from "next/link";
-import type { Profile } from "@/lib/supabase/server";
+import { homeFor, type Profile } from "@/lib/supabase/server";
+import { NavLink } from "./NavLink";
+import { Badge, Button, Logo } from "./ui";
 
 const roleLabel = { employee: "Employee", manager: "Manager", executive: "Leadership" } as const;
+const homeLabel = { employee: "Today", manager: "Team", executive: "Reports" } as const;
 
-export function AppShell({ profile, title, children }: { profile: Profile; title: string; children: React.ReactNode }) {
+export function AppShell({
+  profile,
+  title,
+  description,
+  children,
+}: {
+  profile: Profile;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-neutral-200 dark:border-neutral-800">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-          <Link href="/" className="font-semibold tracking-tight">Cadence</Link>
-          <div className="flex items-center gap-3 text-sm">
-            {profile.is_admin && (
-              <Link href="/people" className="rounded-md px-2 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-900">
-                People
-              </Link>
-            )}
-            <span className="text-neutral-500">
-              {profile.full_name || profile.email} · {roleLabel[profile.role]}
+    <div className="min-h-screen bg-page">
+      <header className="sticky top-0 z-10 border-b border-line-subtle bg-page/85 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-4xl items-center gap-4 px-4 sm:px-6">
+          <Link href="/" className="rounded-md outline-none focus-visible:ring-2 focus-visible:ring-focus">
+            <Logo />
+          </Link>
+          <nav className="flex items-center gap-1">
+            <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>
+            {profile.is_admin && <NavLink href="/people">People</NavLink>}
+          </nav>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="hidden items-center gap-2 text-sm text-fg-secondary sm:flex">
+              {profile.full_name || profile.email}
+              <Badge tone="secondary">{roleLabel[profile.role]}</Badge>
             </span>
             <form action="/auth/signout" method="post">
-              <button className="rounded-md px-2 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-900">Sign out</button>
+              <Button variant="ghost" size="sm">Sign out</Button>
             </form>
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-3xl px-4 py-8">
-        <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
-        <div className="mt-6">{children}</div>
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-[-0.01em] text-fg">{title}</h1>
+        {description && <p className="mt-2 text-md text-fg-secondary">{description}</p>}
+        <div className="mt-8">{children}</div>
       </main>
     </div>
   );

@@ -14,6 +14,13 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 - [ ] Phase 6: Pilot with the IDEO Graphics team
 - [ ] Phase 7: Leave tracking and insights
 
+## Design
+
+The UI follows the [Meld design system](https://meld-design-system.vercel.app): Space Grotesk, Meld's colours, type scale and light/dark themes.
+
+- Tokens live in `src/app/globals.css` and are exposed as Tailwind names (`bg-surface`, `text-muted`, `border-line-subtle`, `bg-primary`…).
+- Shared components live in `src/components/ui` (`Button`, `Input`, `Select`, `Checkbox`, `Field`, `Card`, `Badge`, `Notice`, `Eyebrow`, `EmptyState`, `Logo`). Build new screens from these instead of styling raw elements.
+
 ## Go live, step by step
 
 You need free accounts on Supabase, Vercel and Resend, and access to add DNS records to the email domain.

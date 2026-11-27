@@ -1,78 +1,76 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+// Temporary for testing: email + password sign-in. Email-link sign-in comes
+// back once email sending (Resend on our own domain) is set up.
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-
-  // Explain why a sign-in link didn't work (set by /auth/callback).
-  useEffect(() => {
-    const reason = new URLSearchParams(window.location.search).get("error");
-    if (!reason) return;
-    setError(
-      reason === "browser"
-        ? "Open the sign-in link in the same browser you requested it from, then try again."
-        : "That sign-in link has expired or was already used. Request a new one.",
-    );
-    setStatus("error");
-  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending");
+    setBusy(true);
+    setError("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        // Only people an admin has added can sign in.
-        shouldCreateUser: false,
-        // Same site the person is on: the sign-in check is stored there.
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      // Supabase refuses sign-ups for unknown emails; show other errors as-is.
-      const unknown = /signups? not allowed|user not found/i.test(error.message);
-      setError(unknown ? "We couldn't find that email. Ask your admin to add you." : error.message);
-      setStatus("error");
-    } else {
-      setStatus("sent");
+      setError(
+        /invalid login credentials/i.test(error.message)
+          ? "That email and password don't match. Ask your admin if you need a new password."
+          : error.message,
+      );
+      setBusy(false);
+      return;
     }
+    router.replace("/");
+    router.refresh();
   }
+
+  const input =
+    "w-full rounded-lg border border-neutral-300 bg-transparent px-3 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:focus:border-neutral-100";
 
   return (
     <main className="min-h-screen grid place-items-center px-4">
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-semibold tracking-tight">Cadence</h1>
-        <p className="mt-1 text-sm text-neutral-500">Sign in with your work email.</p>
+        <p className="mt-1 text-sm text-neutral-500">Sign in with your work email and password.</p>
 
-        {status === "sent" ? (
-          <p className="mt-8 rounded-lg bg-neutral-100 p-4 text-sm dark:bg-neutral-900">
-            Check <strong>{email}</strong> for a sign-in link.
-          </p>
-        ) : (
-          <form onSubmit={onSubmit} className="mt-8 space-y-3">
-            <input
-              type="email"
-              required
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="w-full rounded-lg border border-neutral-300 bg-transparent px-3 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:focus:border-neutral-100"
-            />
-            <button
-              disabled={status === "sending"}
-              className="w-full rounded-lg bg-neutral-900 py-2.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-            >
-              {status === "sending" ? "Sending…" : "Send sign-in link"}
-            </button>
-            {status === "error" && <p className="text-sm text-red-600">{error}</p>}
-          </form>
-        )}
+        <form onSubmit={onSubmit} className="mt-8 space-y-3">
+          <input
+            type="email"
+            required
+            autoFocus
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            aria-label="Email"
+            className={input}
+          />
+          <input
+            type="password"
+            required
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            aria-label="Password"
+            className={input}
+          />
+          <button
+            disabled={busy}
+            className="w-full rounded-lg bg-neutral-900 py-2.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+          >
+            {busy ? "Signing in…" : "Sign in"}
+          </button>
+          {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+        </form>
       </div>
     </main>
   );

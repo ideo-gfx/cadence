@@ -50,6 +50,7 @@ export function AddPersonForm({ managers }: { managers: Manager[] }) {
       <div className="grid gap-3 sm:grid-cols-2">
         <input name="full_name" required placeholder="Full name" className={input} aria-label="Full name" />
         <input name="email" type="email" required placeholder="name@company.com" className={input} aria-label="Email" />
+        <input name="password" type="text" required minLength={8} autoComplete="off" placeholder="Starting password (8+ characters)" className={input} aria-label="Starting password" />
         <RoleSelect />
         <ManagerSelect managers={managers} />
       </div>
@@ -76,6 +77,7 @@ export function PersonRow({ person, isSelf, managers }: { person: Profile; isSel
         <input name="full_name" defaultValue={person.full_name} placeholder="Full name" className={input} aria-label="Full name" />
         <RoleSelect value={person.role} />
         <ManagerSelect managers={managers} value={person.manager_id} />
+        <input name="new_password" type="text" minLength={8} autoComplete="off" placeholder="New password (leave empty to keep)" className={`${input} sm:col-span-3`} aria-label="New password" />
       </div>
       <div className="flex flex-wrap items-center gap-4 text-sm">
         <label className="flex items-center gap-2">

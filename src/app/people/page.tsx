@@ -24,7 +24,7 @@ export default async function PeoplePage() {
       <section>
         <h2 className="text-sm font-medium">Add a person</h2>
         <p className="mt-1 text-sm text-neutral-500">
-          They sign in from the login page with this email. No password needed.
+          Set a starting password and share it with them. They sign in with their email and that password.
         </p>
         <div className="mt-3">
           <AddPersonForm managers={managers} />

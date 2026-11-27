@@ -21,7 +21,9 @@ export default function LoginPage() {
       },
     });
     if (error) {
-      setError("We couldn't find that email. Ask your admin to add you.");
+      // Supabase refuses sign-ups for unknown emails; show other errors as-is.
+      const unknown = /signups? not allowed|user not found/i.test(error.message);
+      setError(unknown ? "We couldn't find that email. Ask your admin to add you." : error.message);
       setStatus("error");
     } else {
       setStatus("sent");

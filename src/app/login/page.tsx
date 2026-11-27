@@ -17,7 +17,8 @@ export default function LoginPage() {
       options: {
         // Only people an admin has added can sign in.
         shouldCreateUser: false,
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/callback`,
+        // Same site the person is on: the sign-in check is stored there.
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     if (error) {

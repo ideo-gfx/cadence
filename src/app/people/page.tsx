@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
+import { Card, Eyebrow } from "@/components/ui";
 import { createClient, getProfile, homeFor, type Profile } from "@/lib/supabase/server";
 import { AddPersonForm, PersonRow } from "./forms";
 
@@ -20,30 +21,32 @@ export default async function PeoplePage() {
     .map((p) => ({ id: p.id, name: p.full_name || p.email }));
 
   return (
-    <AppShell profile={profile} title="People">
+    <AppShell profile={profile} title="People" description="Who can sign in, their role, and who they report to.">
       <section>
-        <h2 className="text-sm font-medium">Add a person</h2>
-        <p className="mt-1 text-sm text-neutral-500">
-          They sign in from the login page with this email. No password needed.
-        </p>
-        <div className="mt-3">
+        <Eyebrow>Add a person</Eyebrow>
+        <Card className="mt-3 p-5">
+          <p className="mb-4 text-sm text-fg-secondary">
+            Set a starting password and share it with them. They sign in with their email and that password.
+          </p>
           <AddPersonForm managers={managers} />
-        </div>
+        </Card>
       </section>
 
-      <section className="mt-10">
-        <h2 className="text-sm font-medium">Everyone ({people.length})</h2>
-        <ul className="mt-3 divide-y divide-neutral-200 rounded-lg border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
-          {people.map((p) => (
-            <li key={p.id} className="p-4">
-              <PersonRow
-                person={p}
-                isSelf={p.id === profile.id}
-                managers={managers.filter((m) => m.id !== p.id)}
-              />
-            </li>
-          ))}
-        </ul>
+      <section className="mt-12">
+        <Eyebrow>Everyone ({people.length})</Eyebrow>
+        <Card className="mt-3 overflow-hidden">
+          <ul className="divide-y divide-line-subtle">
+            {people.map((p) => (
+              <li key={p.id} className="p-5">
+                <PersonRow
+                  person={p}
+                  isSelf={p.id === profile.id}
+                  managers={managers.filter((m) => m.id !== p.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </Card>
       </section>
     </AppShell>
   );

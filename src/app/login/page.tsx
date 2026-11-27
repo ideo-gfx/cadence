@@ -35,13 +35,11 @@ export default function LoginPage() {
 
   return (
     <main className="relative grid min-h-screen place-items-center overflow-hidden bg-page px-4">
-      {/* Meld's soft brand glow behind the sign-in card. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(188,73,137,0.15)_0%,rgba(57,64,154,0.18)_50%,transparent_80%)]"
-      />
+      {/* Soft Cadence brand glow behind the sign-in card. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[image:var(--brand-glow)]" />
       <div className="relative w-full max-w-sm">
-        <Logo className="text-xl" />
+        <Logo className="text-2xl" />
+        <p className="mt-2 text-sm text-muted">The rhythm of work.</p>
         <h1 className="mt-8 text-2xl font-semibold leading-tight tracking-tight text-fg">Sign in</h1>
         <p className="mt-1 text-sm text-fg-secondary">Use your work email and password.</p>
 

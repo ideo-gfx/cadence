@@ -11,7 +11,7 @@
   /* Surfaces */
   --surface-page: light-dark(#ffffff, #121214);
   --surface-default: light-dark(#ffffff, #1c1c1f);
-  --surface-subtle: light-dark(#f7f7f5, #242428);
+  --surface-subtle: light-dark(#f8f7f9, #242428); /* brand off-white */
   --surface-inset: light-dark(#efefef, #161618);
   --surface-hover: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.06));
   --surface-selected: light-dark(rgba(49, 92, 255, 0.08), rgba(165, 170, 245, 0.16));
@@ -32,11 +32,22 @@
   --border-strong: light-dark(#767672, #66666c);
   --border-focus: light-dark(#315cff, #a5aaf5);
 
+  /* Cadence brand (brand/brand-guidelines). The rhythm mark's three bars swap
+     colours on dark backgrounds, as the kit specifies. */
+  --cadence-brand-primary: #bc4989;
+  --cadence-brand-pink: #d95c9d;
+  --cadence-brand-rose: #9f356d;
+  --cadence-light-pink: #f5e5ee;
+  --cadence-offwhite: #f8f7f9;
+  --cadence-bar-1: light-dark(#bc4989, #d95c9d);
+  --cadence-bar-2: light-dark(#d95c9d, #bc4989);
+  --cadence-bar-3: light-dark(#9f356d, #f5e5ee);
+
   /* Brand and actions */
   --interactive-primary: #bc4989;
-  --interactive-primary-hover: light-dark(#a03871, #d1569b);
+  --interactive-primary-hover: light-dark(#9f356d, #d95c9d); /* brand rose / brand pink */
   --interactive-secondary: light-dark(#39409a, #8ea5ff);
-  --meld-primary-light: rgba(188, 73, 137, 0.12);
+  --meld-primary-light: light-dark(#f5e5ee, rgba(217, 92, 157, 0.16));
   --meld-secondary-light: rgba(57, 64, 154, 0.12);
   --meld-gradient: linear-gradient(135deg, #bc4989 0%, #39409a 100%);
   --meld-gradient-subtle: linear-gradient(135deg, light-dark(rgba(188, 73, 137, 0.08), rgba(188, 73, 137, 0.15)) 0%, light-dark(rgba(57, 64, 154, 0.08), rgba(57, 64, 154, 0.15)) 100%);
@@ -91,6 +102,10 @@
   --color-primary: var(--interactive-primary);
   --color-primary-hover: var(--interactive-primary-hover);
   --color-primary-light: var(--meld-primary-light);
+  --color-brand: var(--cadence-brand-primary);
+  --color-brand-pink: var(--cadence-brand-pink);
+  --color-brand-rose: var(--cadence-brand-rose);
+  --color-brand-tint: var(--cadence-light-pink);
   --color-secondary: var(--interactive-secondary);
   --color-secondary-light: var(--meld-secondary-light);
 
@@ -102,6 +117,9 @@
   --color-success: var(--status-success);
   --color-warning: var(--status-warning);
   --color-info: var(--status-info);
+
+  --brand-glow: radial-gradient(circle at 75% 20%, light-dark(rgba(217, 92, 157, 0.18), rgba(217, 92, 157, 0.16)) 0%, light-dark(rgba(188, 73, 137, 0.08), rgba(159, 53, 109, 0.14)) 45%, transparent 75%);
+  --brand-tint: linear-gradient(135deg, light-dark(#f5e5ee, rgba(217, 92, 157, 0.1)) 0%, light-dark(#f8f7f9, rgba(217, 92, 157, 0.03)) 100%);
 
   --shadow-meld-sm: var(--meld-shadow-sm);
   --shadow-meld-md: var(--meld-shadow-md);

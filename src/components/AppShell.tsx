@@ -31,7 +31,7 @@ export function AppShell({
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden items-center gap-2 text-sm text-fg-secondary sm:flex">
               {profile.full_name || profile.email}
-              <Badge tone="secondary">{roleLabel[profile.role]}</Badge>
+              <Badge tone="primary">{roleLabel[profile.role]}</Badge>
             </span>
             <form action="/auth/signout" method="post">
               <Button variant="ghost" size="sm">Sign out</Button>

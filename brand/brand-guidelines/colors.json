@@ -1,0 +1,15 @@
+{
+  "brand": {
+    "primary": "#BC4989",
+    "pink": "#D95C9D",
+    "rose": "#9F356D"
+  },
+  "neutral": {
+    "charcoal": "#171717",
+    "white": "#FFFFFF",
+    "offwhite": "#F8F7F9"
+  },
+  "support": {
+    "lightPink": "#F5E5EE"
+  }
+}

@@ -1,35 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button, Card, Input, Logo, Notice } from "@/components/ui";
 
+// Temporary for testing: email + password sign-in. Email-link sign-in comes
+// back once email sending (Resend on our own domain) is set up.
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending");
+    setBusy(true);
+    setError("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        // Only people an admin has added can sign in.
-        shouldCreateUser: false,
-        // Same site the person is on: the sign-in check is stored there.
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      // Supabase refuses sign-ups for unknown emails; show other errors as-is.
-      const unknown = /signups? not allowed|user not found/i.test(error.message);
-      setError(unknown ? "We couldn't find that email. Ask your admin to add you." : error.message);
-      setStatus("error");
-    } else {
-      setStatus("sent");
+      setError(
+        /invalid login credentials/i.test(error.message)
+          ? "That email and password don't match. Ask your admin if you need a new password."
+          : error.message,
+      );
+      setBusy(false);
+      return;
     }
+    router.replace("/");
+    router.refresh();
   }
 
   return (
@@ -42,30 +43,34 @@ export default function LoginPage() {
       <div className="relative w-full max-w-sm">
         <Logo className="text-xl" />
         <h1 className="mt-8 text-2xl font-semibold leading-tight tracking-tight text-fg">Sign in</h1>
-        <p className="mt-1 text-sm text-fg-secondary">Use your work email. We&apos;ll send you a link.</p>
+        <p className="mt-1 text-sm text-fg-secondary">Use your work email and password.</p>
 
         <Card className="mt-6 p-5 shadow-meld-md">
-          {status === "sent" ? (
-            <p className="text-sm text-fg">
-              Check <strong className="font-semibold">{email}</strong> for a sign-in link.
-            </p>
-          ) : (
-            <form onSubmit={onSubmit} className="space-y-3">
-              <Input
-                type="email"
-                required
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                aria-label="Work email"
-              />
-              <Button fullWidth disabled={status === "sending"}>
-                {status === "sending" ? "Sending…" : "Send sign-in link"}
-              </Button>
-              {status === "error" && <Notice tone="danger">{error}</Notice>}
-            </form>
-          )}
+          <form onSubmit={onSubmit} className="space-y-3">
+            <Input
+              type="email"
+              required
+              autoFocus
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              aria-label="Work email"
+            />
+            <Input
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              aria-label="Password"
+            />
+            <Button fullWidth disabled={busy}>
+              {busy ? "Signing in…" : "Sign in"}
+            </Button>
+            {error && <Notice tone="danger">{error}</Notice>}
+          </form>
         </Card>
       </div>
     </main>

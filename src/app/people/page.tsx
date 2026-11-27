@@ -26,7 +26,7 @@ export default async function PeoplePage() {
         <Eyebrow>Add a person</Eyebrow>
         <Card className="mt-3 p-5">
           <p className="mb-4 text-sm text-fg-secondary">
-            They sign in from the login page with this email. No password needed.
+            Set a starting password and share it with them. They sign in with their email and that password.
           </p>
           <AddPersonForm managers={managers} />
         </Card>

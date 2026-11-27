@@ -24,7 +24,9 @@ function readFields(form: FormData) {
   };
 }
 
-/** Adds a person. They then sign in from the login page with their email. */
+const MIN_PASSWORD = 8;
+
+/** Adds a person with a starting password the admin shares with them. */
 export async function addPerson(_prev: ActionState, form: FormData): Promise<ActionState> {
   try {
     await requireAdmin();
@@ -32,11 +34,16 @@ export async function addPerson(_prev: ActionState, form: FormData): Promise<Act
     const fields = readFields(form);
     if (!email.includes("@")) return { ok: false, message: "Enter a valid email." };
     if (!fields.full_name) return { ok: false, message: "Enter their name." };
+    const password = String(form.get("password") ?? "");
+    if (password.length < MIN_PASSWORD) {
+      return { ok: false, message: `The password needs at least ${MIN_PASSWORD} characters.` };
+    }
 
     const admin = createAdminClient();
     const { data, error } = await admin.auth.admin.createUser({
       email,
       email_confirm: true,
+      password,
       user_metadata: { full_name: fields.full_name },
     });
     if (error || !data.user) {
@@ -52,7 +59,7 @@ export async function addPerson(_prev: ActionState, form: FormData): Promise<Act
     if (updateError) return { ok: false, message: updateError.message };
 
     revalidatePath("/people");
-    return { ok: true, message: `Added ${fields.full_name}. They can sign in with ${email}.` };
+    return { ok: true, message: `Added ${fields.full_name}. They sign in with ${email} and the password you set.` };
   } catch (e) {
     return { ok: false, message: (e as Error).message };
   }
@@ -71,6 +78,10 @@ export async function updatePerson(_prev: ActionState, form: FormData): Promise<
       return { ok: false, message: "You can't remove your own admin access or deactivate yourself." };
     }
     if (fields.manager_id === id) return { ok: false, message: "Someone can't report to themselves." };
+    const newPassword = String(form.get("new_password") ?? "");
+    if (newPassword && newPassword.length < MIN_PASSWORD) {
+      return { ok: false, message: `The new password needs at least ${MIN_PASSWORD} characters.` };
+    }
 
     // Row-level security makes sure only admins can do this update.
     const supabase = await createClient();
@@ -84,11 +95,12 @@ export async function updatePerson(_prev: ActionState, form: FormData): Promise<
     const admin = createAdminClient();
     const { error: banError } = await admin.auth.admin.updateUserById(id, {
       ban_duration: active ? "none" : "876000h",
+      ...(newPassword ? { password: newPassword } : {}),
     });
     if (banError) return { ok: false, message: banError.message };
 
     revalidatePath("/people");
-    return { ok: true, message: "Saved." };
+    return { ok: true, message: newPassword ? "Saved, with the new password." : "Saved." };
   } catch (e) {
     return { ok: false, message: (e as Error).message };
   }

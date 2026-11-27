@@ -56,7 +56,16 @@ You need free accounts on Supabase, Vercel and Resend, and access to add DNS rec
 2. Table Editor > `profiles`: fill in your `full_name`, set `role`, and tick `is_admin`.
 3. Open the live site and sign in with your email. You'll see **People** in the header.
 
-From then on, add everyone from the **People** screen: name, email, role and who they report to. They sign in from the login page with their email; there are no passwords. Unticking **Active** blocks someone's sign-in but keeps their history.
+**Sign-in for now (testing):** email and password. Set your own password with the SQL snippet below, then add everyone else from the **People** screen with a starting password you share with them. Email-link sign-in comes back once Resend is set up on our domain.
+
+```sql
+-- Supabase > SQL Editor: set a password for an existing user
+update auth.users
+set encrypted_password = extensions.crypt('CHOOSE-A-PASSWORD', extensions.gen_salt('bf'))
+where email = 'you@yourcompany.com';
+```
+
+From then on, add everyone from the **People** screen: name, email, starting password, role and who they report to. Unticking **Active** blocks someone's sign-in but keeps their history.
 
 ## Run locally
 

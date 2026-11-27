@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
+
+  // Explain why a sign-in link didn't work (set by /auth/callback).
+  useEffect(() => {
+    const reason = new URLSearchParams(window.location.search).get("error");
+    if (!reason) return;
+    setError(
+      reason === "browser"
+        ? "Open the sign-in link in the same browser you requested it from, then try again."
+        : "That sign-in link has expired or was already used. Request a new one.",
+    );
+    setStatus("error");
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -63,3 +63,18 @@ export function formatDay(date: string, opts: Intl.DateTimeFormatOptions = { wee
 }
 
 export const formatHours = (h: number) => `${Number.isInteger(h) ? h : h.toFixed(2).replace(/0$/, "")}h`;
+
+/**
+ * Working days as ISO weekday numbers (1 = Monday ... 7 = Sunday). Monday to
+ * Friday by default; set NEXT_PUBLIC_WORK_DAYS=1,2,3,4,5,6 to add Saturday.
+ * Reports and reminders only go out on these days.
+ */
+export const WORK_DAYS = (process.env.NEXT_PUBLIC_WORK_DAYS ?? "1,2,3,4,5")
+  .split(",")
+  .map((s) => Number(s.trim()))
+  .filter((n) => n >= 1 && n <= 7);
+
+export function isWorkingDay(date: string) {
+  const dow = new Date(`${date}T00:00:00Z`).getUTCDay() || 7;
+  return WORK_DAYS.includes(dow);
+}

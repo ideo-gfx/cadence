@@ -13,6 +13,7 @@ import {
   type DayStatus,
   type TaskStatus,
 } from "@/lib/workday";
+import { FlaggedTasks } from "@/components/FlaggedTasks";
 import { TaskList } from "@/components/TaskList";
 import { saveDay, type SaveResult, type TaskInput } from "./actions";
 
@@ -22,6 +23,7 @@ export type SavedDay = {
   note: string;
   state: DayState;
   reviewNote: string;
+  reviewTasks: { description: string; note: string }[];
   tasks: TaskInput[];
 };
 
@@ -92,6 +94,7 @@ export function DayForm({
         <Card className="border-primary/40 bg-primary-light p-4">
           <p className="text-sm font-medium text-fg">This day was sent back for changes</p>
           {saved.reviewNote && <p className="mt-1 text-sm text-fg-secondary">{saved.reviewNote}</p>}
+          {saved.reviewTasks.length > 0 && <FlaggedTasks tasks={saved.reviewTasks} bare />}
         </Card>
       )}
 

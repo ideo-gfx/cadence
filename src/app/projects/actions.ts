@@ -1,13 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient, getProfile } from "@/lib/supabase/server";
+import { canEditProjects, createClient, getProfile } from "@/lib/supabase/server";
 
 export type ActionState = { ok: boolean; message: string } | null;
 
 async function requireEditor() {
   const me = await getProfile();
-  if (!me || !(me.is_admin || me.role === "manager")) throw new Error("Only admins and managers can edit projects.");
+  if (!me || !canEditProjects(me)) throw new Error("You don't have permission to edit projects.");
   return me;
 }
 
@@ -35,9 +35,10 @@ export async function updateProject(_prev: ActionState, form: FormData): Promise
     const id = String(form.get("id") ?? "");
     const name = String(form.get("name") ?? "").trim();
     const active = form.get("active") === "on";
+    const lead = String(form.get("lead_id") ?? "") || null;
     if (!name) return { ok: false, message: "Enter a name." };
     const supabase = await createClient();
-    const { error } = await supabase.from("projects").update({ name, active }).eq("id", id);
+    const { error } = await supabase.from("projects").update({ name, active, lead_id: lead }).eq("id", id);
     if (error) return { ok: false, message: friendly(error.message) };
     revalidatePath("/projects");
     return { ok: true, message: "Saved." };

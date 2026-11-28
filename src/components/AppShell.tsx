@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { homeFor, type Profile } from "@/lib/supabase/server";
+import { canEditProjects, homeFor, type Profile } from "@/lib/supabase/server";
 import { NavLink } from "./NavLink";
 import { Badge, Button, Logo } from "./ui";
 
@@ -29,9 +29,13 @@ export function AppShell({
             {profile.role !== "employee" && (
               <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>
             )}
-            {profile.role !== "manager" && profile.is_admin && <NavLink href="/team">Team</NavLink>}
+            {profile.role !== "manager" && (profile.is_admin || profile.backup_for.length > 0) && (
+              <NavLink href="/team">Team</NavLink>
+            )}
             {profile.role !== "executive" && profile.is_admin && <NavLink href="/reports">Reports</NavLink>}
-            {(profile.is_admin || profile.role === "manager") && <NavLink href="/projects">Projects</NavLink>}
+            {profile.leads_projects && <NavLink href="/project-review">Project review</NavLink>}
+            {canEditProjects(profile) && <NavLink href="/projects">Projects</NavLink>}
+            {(profile.is_admin || profile.role === "manager") && <NavLink href="/access">Access</NavLink>}
             {profile.is_admin && <NavLink href="/people">People</NavLink>}
           </nav>
           <div className="ml-auto flex items-center gap-3">

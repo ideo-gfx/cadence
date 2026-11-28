@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { teamToday } from "@/lib/workday";
 
 export type Role = "employee" | "manager" | "executive";
 export type Profile = {
@@ -10,6 +11,11 @@ export type Profile = {
   manager_id: string | null;
   is_admin: boolean;
   active: boolean;
+  can_manage_projects: boolean;
+  /** Managers who made this person their backup approver for today. */
+  backup_for: string[];
+  /** Leads at least one project, so reviews tasks logged on it. */
+  leads_projects: boolean;
 };
 
 export async function createClient() {
@@ -38,10 +44,25 @@ export async function getProfile(): Promise<Profile | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
   const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  const profile = (data as Profile) ?? null;
+  if (!data) return null;
   // Deactivated people are treated as signed out.
-  if (profile && profile.active === false) return null;
-  return profile;
+  if (data.active === false) return null;
+  const today = teamToday();
+  const [{ data: backups }, { count: leadCount }] = await Promise.all([
+    supabase
+      .from("approval_delegates")
+      .select("manager_id")
+      .eq("delegate_id", user.id)
+      .lte("starts_on", today)
+      .gte("ends_on", today),
+    supabase.from("projects").select("id", { count: "exact", head: true }).eq("lead_id", user.id).eq("active", true),
+  ]);
+  return {
+    ...(data as Profile),
+    can_manage_projects: Boolean(data.can_manage_projects),
+    backup_for: (backups ?? []).map((b) => b.manager_id as string),
+    leads_projects: (leadCount ?? 0) > 0,
+  };
 }
 
 export const homeFor: Record<Role, string> = {
@@ -49,3 +70,9 @@ export const homeFor: Record<Role, string> = {
   manager: "/team",
   executive: "/reports",
 };
+
+/** Can approve or send back someone's day: a manager, or a backup approver today. */
+export const canReviewDays = (p: Profile) => p.role === "manager" || p.backup_for.length > 0;
+
+/** Can edit the projects list. */
+export const canEditProjects = (p: Profile) => p.is_admin || p.role === "manager" || p.can_manage_projects;

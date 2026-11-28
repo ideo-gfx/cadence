@@ -10,7 +10,7 @@ import { addDays, dayStatusLabel, formatDay, formatHours, isIsoDate, isWorkingDa
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (profile.role !== "executive" && !profile.is_admin) redirect(homeFor[profile.role]);
 
   const today = teamToday();

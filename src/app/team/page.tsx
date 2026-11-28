@@ -41,7 +41,7 @@ export default async function TeamPage({
   searchParams: Promise<{ date?: string; scope?: string }>;
 }) {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   const isManager = profile.role === "manager";
   if (!isManager && !profile.is_admin) redirect(homeFor[profile.role]);
 

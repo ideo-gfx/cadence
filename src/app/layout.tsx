@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 
-// Meld's typeface.
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+// Geist (trial): Vercel's interface typeface.
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 // Vercel sets VERCEL_ENV to "preview" on preview deployments, so the browser
@@ -33,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} antialiased`}>{children}</body>
+      <body className={`${geist.variable} antialiased`}>{children}</body>
     </html>
   );
 }

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="520" height="150" viewBox="0 0 520 150">
-  <title>Cadence — Rhythm logo</title>
-  <desc>Three rounded bars representing the rhythm of work.</desc>
-  <g transform="translate(24 23) scale(1.05)"><g id="cadence-rhythm-mark" fill="none">
-      <rect x="8" y="44" width="20" height="44" rx="10" fill="#FFFFFF"/>
-      <rect x="38" y="16" width="20" height="72" rx="10" fill="#FFFFFF"/>
-      <rect x="68" y="30" width="20" height="58" rx="10" fill="#FFFFFF"/>
-    </g></g><text x="145" y="96" font-family="Space Grotesk, Arial, sans-serif" font-size="64" font-weight="600" letter-spacing="-2" fill="#FFFFFF">Cadence</text>
-</svg>

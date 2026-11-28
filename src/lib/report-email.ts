@@ -3,9 +3,9 @@ import type { DailyReport } from "./report";
 import { dayStatusLabel, formatDay, formatHours } from "./workday";
 
 // Plain, inline-styled HTML so it renders the same in Gmail and Outlook.
-// Colours follow Meld: #171717 text, #5a5a5a secondary, #bc4989 accent.
+// Colours follow the Cadence brand kit: #17151b charcoal, #6d6670 muted, #b92d63 magenta.
 
-const C = { fg: "#171717", muted: "#70706c", line: "#e5e5e0", accent: "#bc4989", danger: "#dc2626", subtle: "#f7f7f5" };
+const C = { fg: "#17151b", muted: "#6d6670", line: "#e5dde5", accent: "#b92d63", danger: "#dc2626", subtle: "#f8f6f9" };
 const font = "font-family:'Space Grotesk',Arial,Helvetica,sans-serif;";
 
 function section(title: string, body: string) {

@@ -19,7 +19,7 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 
 Brand: the Cadence branding kit lives in `brand/` (logos, app icons, colours, guidelines). Tagline: *The rhythm of work.* In the app, use `<Logo />` or `<RhythmMark />` from `src/components/ui` rather than the image files; the favicon and home-screen icon are `src/app/favicon.ico` and `apple-icon.png`, both from `brand/App-Icons`.
 
-The UI follows the [Meld design system](https://meld-design-system.vercel.app): Space Grotesk, Meld's colours, type scale and light/dark themes.
+The UI follows the [Meld design system](https://meld-design-system.vercel.app) with the Geist typeface (chosen over Meld's Space Grotesk for a more neutral, enterprise feel), Meld's colours, type scale and light/dark themes.
 
 - Tokens live in `src/app/globals.css` and are exposed as Tailwind names (`bg-surface`, `text-muted`, `border-line-subtle`, `bg-primary`…).
 - Shared components live in `src/components/ui` (`Button`, `Input`, `Select`, `Checkbox`, `Field`, `Card`, `Badge`, `Notice`, `Eyebrow`, `EmptyState`, `Logo`). Build new screens from these instead of styling raw elements.

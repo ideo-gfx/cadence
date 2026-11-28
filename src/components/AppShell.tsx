@@ -10,11 +10,24 @@ const homeLabel = { employee: "Today", manager: "Team", executive: "Reports" } a
 export function AppHeader({ profile }: { profile: Profile }) {
   return (
     <header className="sticky top-0 z-10 border-b border-line-subtle bg-page/85 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-4xl items-center gap-4 px-4 sm:px-6">
-        <Link href="/" className="rounded-md outline-none focus-visible:ring-2 focus-visible:ring-focus">
-          <Logo />
-        </Link>
-        <nav className="flex min-w-0 items-center gap-1 overflow-x-auto">
+      {/* Two rows: logo and account on top, the menu below. The menu scrolls
+          sideways when it doesn't fit, with no visible scrollbar. */}
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="flex h-14 items-center gap-4">
+          <Link href="/" className="rounded-md outline-none focus-visible:ring-2 focus-visible:ring-focus">
+            <Logo />
+          </Link>
+          <div className="ml-auto flex shrink-0 items-center gap-3">
+            <span className="hidden items-center gap-2 whitespace-nowrap text-sm text-fg-secondary sm:flex">
+              {profile.full_name || profile.email}
+              <Badge tone="primary">{roleLabel[profile.role]}</Badge>
+            </span>
+            <form action="/auth/signout" method="post">
+              <Button variant="ghost" size="sm">Sign out</Button>
+            </form>
+          </div>
+        </div>
+        <nav className="no-scrollbar -mx-3 flex items-center gap-1 overflow-x-auto overflow-y-hidden px-0 pb-2">
           {profile.role !== "executive" && <NavLink href="/entry">Today</NavLink>}
           {profile.role !== "employee" && <NavLink href={homeFor[profile.role]}>{homeLabel[profile.role]}</NavLink>}
           {profile.role !== "manager" && (profile.is_admin || profile.backup_for.length > 0) && (
@@ -26,15 +39,6 @@ export function AppHeader({ profile }: { profile: Profile }) {
           {(profile.is_admin || profile.role === "manager") && <NavLink href="/access">Access</NavLink>}
           {profile.is_admin && <NavLink href="/people">People</NavLink>}
         </nav>
-        <div className="ml-auto flex items-center gap-3">
-          <span className="hidden items-center gap-2 text-sm text-fg-secondary sm:flex">
-            {profile.full_name || profile.email}
-            <Badge tone="primary">{roleLabel[profile.role]}</Badge>
-          </span>
-          <form action="/auth/signout" method="post">
-            <Button variant="ghost" size="sm">Sign out</Button>
-          </form>
-        </div>
       </div>
     </header>
   );

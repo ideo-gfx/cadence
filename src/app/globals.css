@@ -150,3 +150,12 @@ body {
 ::selection {
   background: var(--meld-primary-light);
 }
+
+/* Scrollable rows (like the header menu) that still scroll by swipe or
+   trackpad, without a visible scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

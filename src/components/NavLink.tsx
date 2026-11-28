@@ -11,7 +11,7 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
       href={href}
       aria-current={active ? "page" : undefined}
       className={cx(
-        "relative rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-100 outline-none focus-visible:ring-2 focus-visible:ring-focus",
+        "relative shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-100 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
         "active:scale-[0.97]",
         active ? "bg-primary-light text-brand-fg" : "text-fg-secondary hover:bg-hover hover:text-fg",
       )}

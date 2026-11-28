@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatDay } from "@/lib/workday";
+import { PendingLabel } from "./NavLink";
 import { cx } from "./ui";
 
 export type StripDay = {
@@ -28,7 +29,7 @@ export function DayStrip({ days, current, today }: { days: StripDay[]; current: 
             href={d.href}
             aria-current={active ? "date" : undefined}
             className={cx(
-              "flex min-w-[4.5rem] shrink-0 flex-col items-center rounded-lg border px-2 py-1.5 text-center transition-colors",
+              "relative flex min-w-[4.5rem] shrink-0 flex-col items-center rounded-lg border px-2 py-1.5 text-center transition-[color,background-color,transform] duration-100 active:scale-[0.97]",
               "outline-none focus-visible:ring-2 focus-visible:ring-focus",
               active ? "border-primary bg-primary-light" : "border-line-subtle bg-surface hover:bg-subtle",
             )}
@@ -40,6 +41,7 @@ export function DayStrip({ days, current, today }: { days: StripDay[]; current: 
               {formatDay(d.date, { day: "numeric", month: "short" })}
             </span>
             <span className={cx("text-2xs", toneClass[d.tone ?? "muted"])}>{d.label}</span>
+            <PendingLabel />
           </Link>
         );
       })}

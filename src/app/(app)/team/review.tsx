@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 import { TaskList, type TaskView } from "@/components/TaskList";
 import { FlaggedTasks } from "@/components/FlaggedTasks";
 import { Badge, Button, Card, Checkbox, Input, Notice, cx } from "@/components/ui";
@@ -54,13 +54,22 @@ export function TeamDay({
 }) {
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<ReviewResult | null>(null);
+  // Approved days show as approved the moment you click, while the server catches up.
+  const [approvedNow, markApproved] = useOptimistic(new Set<string>(), (set, ids: string[]) => new Set([...set, ...ids]));
+  rows = rows.map((r) =>
+    r.day && r.day.state === "submitted" && approvedNow.has(r.day.id) ? { ...r, day: { ...r.day, state: "approved" } } : r,
+  );
 
   const waiting = rows.filter((r) => r.canApprove && r.day?.state === "submitted");
   const notIn = rows.filter((r) => !r.day || r.day.state === "draft");
   const approved = rows.filter((r) => r.day?.state === "approved").length;
 
   const approveAll = () =>
-    startTransition(async () => setResult(await approveDays(waiting.map((r) => r.day!.id))));
+    startTransition(async () => {
+      const ids = waiting.map((r) => r.day!.id);
+      markApproved(ids);
+      setResult(await approveDays(ids));
+    });
 
   return (
     <div className="space-y-6">
@@ -85,7 +94,7 @@ export function TeamDay({
       <ul className="space-y-4">
         {rows.map((r) => (
           <li key={r.day?.id ?? r.personId}>
-            <PersonCard row={r} isAdmin={isAdmin} />
+            <PersonCard row={r} isAdmin={isAdmin} onApprove={markApproved} />
           </li>
         ))}
       </ul>
@@ -93,7 +102,15 @@ export function TeamDay({
   );
 }
 
-function PersonCard({ row, isAdmin }: { row: PersonDay; isAdmin: boolean }) {
+function PersonCard({
+  row,
+  isAdmin,
+  onApprove,
+}: {
+  row: PersonDay;
+  isAdmin: boolean;
+  onApprove: (ids: string[]) => void;
+}) {
   const { day } = row;
   const [mode, setMode] = useState<"idle" | "return" | "reopen">("idle");
   const [reason, setReason] = useState("");
@@ -226,7 +243,12 @@ function PersonCard({ row, isAdmin }: { row: PersonDay; isAdmin: boolean }) {
             <div className="flex flex-wrap items-center gap-2">
               {canReview && (
                 <>
-                  <Button size="sm" disabled={pending} onClick={() => act(() => approveDays([day.id]))}>
+                  <Button size="sm" disabled={pending} onClick={() =>
+                      act(() => {
+                        onApprove([day.id]);
+                        return approveDays([day.id]);
+                      })
+                    }>
                     {pending ? "Saving…" : "Approve"}
                   </Button>
                   <Button size="sm" variant="secondary" disabled={pending} onClick={() => setMode("return")}>

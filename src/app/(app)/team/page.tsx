@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { DayStrip } from "@/components/DayStrip";
+import { PendingLabel } from "@/components/NavLink";
 import { EmptyState, cx } from "@/components/ui";
 import { canReviewDays, createClient, getProfile, homeFor, type Profile } from "@/lib/supabase/server";
 import {
@@ -288,7 +289,7 @@ function Tabs({ items, subtle }: { items: { href: string; label: string; active:
           href={t.href}
           aria-current={t.active ? "page" : undefined}
           className={cx(
-            "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+            "relative rounded-lg px-3 py-1.5 text-sm font-medium transition-[color,background-color,transform] duration-100 active:scale-[0.97]",
             t.active
               ? subtle
                 ? "bg-subtle text-fg"
@@ -296,7 +297,7 @@ function Tabs({ items, subtle }: { items: { href: string; label: string; active:
               : "text-fg-secondary hover:bg-hover hover:text-fg",
           )}
         >
-          {t.label}
+          <PendingLabel>{t.label}</PendingLabel>
         </Link>
       ))}
     </nav>

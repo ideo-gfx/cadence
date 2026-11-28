@@ -22,10 +22,12 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
   const isPublic = PUBLIC_PATHS.some((p) => request.nextUrl.pathname.startsWith(p));
+  // Refreshes an expiring session. getClaims verifies the token locally when
+  // the project uses signing keys, so most requests skip a call to Supabase Auth.
+  const { data } = await supabase.auth.getClaims();
 
-  if (!user && !isPublic) {
+  if (!data?.claims && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

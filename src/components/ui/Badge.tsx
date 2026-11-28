@@ -4,6 +4,7 @@ const tones = {
   neutral: "bg-subtle text-fg-secondary",
   primary: "bg-primary-light text-primary",
   secondary: "bg-secondary-light text-secondary",
+  success: "bg-success/12 text-success",
 } as const;
 
 export function Badge({

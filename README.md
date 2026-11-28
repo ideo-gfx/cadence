@@ -8,9 +8,9 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 
 - [x] Phase 1: Foundation and sign-in (roles: employee, manager, leadership; reporting lines)
 - [x] Phase 2: Go live (People screen for admins, deploy setup below)
-- [ ] Phase 3: Daily entry
-- [ ] Phase 4: Manager approval
-- [ ] Phase 5: Daily report email and reminders
+- [x] Phase 3: Daily entry (run `supabase/migrations/0003_daily_entry.sql` in the Supabase SQL Editor)
+- [x] Phase 4: Manager approval (run `supabase/migrations/0004_approvals.sql`)
+- [x] Phase 5: Daily report email and reminders (run `supabase/migrations/0005_daily_report.sql`; see "Daily report" below)
 - [ ] Phase 6: Pilot with the IDEO Graphics team
 - [ ] Phase 7: Leave tracking and insights
 
@@ -30,7 +30,7 @@ You need free accounts on Supabase, Vercel and Resend, and access to add DNS rec
 ### 1. Supabase (database and sign-in)
 
 1. Create a project at supabase.com. Pick the region closest to the team.
-2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, then `0002_…`).
+2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, `0002_…`, and so on). When a new file appears, run just that one.
 3. Project Settings > API: copy the **Project URL**, the **anon** key and the **service_role** key. Keep the service_role key secret.
 
 ### 2. Resend (email)
@@ -72,3 +72,19 @@ From then on, add everyone from the **People** screen: name, email, starting pas
 ## Run locally
 
 Copy `.env.example` to `.env.local`, fill in the values, then `npm install && npm run dev` and open http://localhost:3000.
+
+## Daily report and reminders
+
+Three Vercel Cron jobs (in `vercel.json`, times in India time) run on working days (Monday to Friday unless `NEXT_PUBLIC_WORK_DAYS` says otherwise):
+
+- **6:30 PM** `/api/cron/remind-people`: emails anyone who hasn't submitted today.
+- **8:00 PM** `/api/cron/remind-managers`: emails managers who have days waiting.
+- **9:00 PM** `/api/cron/report`: closes today's report (every approved day not yet reported, including late approvals from earlier days) and emails it to everyone with the Leadership role.
+
+Leadership and admins can read the report any time on the **Reports** screen, so it works before email is set up.
+
+To turn email on:
+1. Set up Resend on the sending domain (step 2 above).
+2. In Vercel > Settings > Environment Variables, add `RESEND_API_KEY`, `EMAIL_FROM` (for example `Cadence <cadence@ideogfx.com>`), `CRON_SECRET` (any long random string) and `EMAIL_ENABLED=true`, then redeploy.
+
+Without `EMAIL_ENABLED=true` the jobs still run and close each report, but skip sending.

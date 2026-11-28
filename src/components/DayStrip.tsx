@@ -34,10 +34,10 @@ export function DayStrip({ days, current, today }: { days: StripDay[]; current: 
               active ? "border-primary bg-primary-light" : "border-line-subtle bg-surface hover:bg-subtle",
             )}
           >
-            <span className={cx("text-2xs", active ? "text-primary" : "text-muted")}>
+            <span className={cx("text-2xs", active ? "text-brand-fg" : "text-muted")}>
               {d.date === today ? "Today" : formatDay(d.date, { weekday: "short" })}
             </span>
-            <span className={cx("text-sm font-medium", active ? "text-primary" : "text-fg")}>
+            <span className={cx("text-sm font-medium", active ? "text-brand-fg" : "text-fg")}>
               {formatDay(d.date, { day: "numeric", month: "short" })}
             </span>
             <span className={cx("text-2xs", toneClass[d.tone ?? "muted"])}>{d.label}</span>

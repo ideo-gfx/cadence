@@ -13,7 +13,7 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
       className={cx(
         "relative rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-100 outline-none focus-visible:ring-2 focus-visible:ring-focus",
         "active:scale-[0.97]",
-        active ? "bg-primary-light text-primary" : "text-fg-secondary hover:bg-hover hover:text-fg",
+        active ? "bg-primary-light text-brand-fg" : "text-fg-secondary hover:bg-hover hover:text-fg",
       )}
     >
       <PendingLabel>{children}</PendingLabel>

@@ -1,3 +1,11 @@
-# Cadence Brand Kit
+# Cadence Branding Kit
 
-Brand identity package for Cadence, using the Rhythm logo direction and MELD-inspired palette. Start with `brand-guidelines/README.md`. SVG files are source assets; PNG files are ready for quick use.
+This package follows the approved Rhythm logo from the supplied reference image.
+
+- Logo assets: SVG and PNG, light/dark, horizontal/stacked/symbol-only/monochrome.
+- App icons: PNG at multiple sizes and favicon ICO.
+- Brand tokens: CSS and JSON.
+- Guidelines: logo usage and typography.
+- Preview: full brand board.
+
+Primary tagline: **The rhythm of work.**

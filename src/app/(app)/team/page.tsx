@@ -293,7 +293,7 @@ function Tabs({ items, subtle }: { items: { href: string; label: string; active:
             t.active
               ? subtle
                 ? "bg-subtle text-fg"
-                : "bg-primary-light text-primary"
+                : "bg-primary-light text-brand-fg"
               : "text-fg-secondary hover:bg-hover hover:text-fg",
           )}
         >

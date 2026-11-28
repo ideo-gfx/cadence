@@ -22,7 +22,7 @@ type QueueRow = {
 
 export default async function ProjectReviewPage() {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (!profile.leads_projects) redirect(homeFor[profile.role]);
 
   const supabase = await createClient();

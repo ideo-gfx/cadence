@@ -9,10 +9,14 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
+// Vercel sets VERCEL_ENV to "preview" on preview deployments, so the browser
+// tab reads "Cadence Beta" there and plain "Cadence" in production.
+const appName = process.env.VERCEL_ENV === "preview" ? "Cadence Beta" : "Cadence";
+
 export const metadata: Metadata = {
-  title: { default: "Cadence", template: "%s · Cadence" },
+  title: { default: appName, template: `%s · ${appName}` },
   description: "The rhythm of work. Daily updates, timesheets, leave and approvals in one calm workspace.",
-  applicationName: "Cadence",
+  applicationName: appName,
 };
 
 export const viewport: Viewport = {

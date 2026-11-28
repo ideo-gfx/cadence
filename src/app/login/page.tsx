@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button, Card, Input, Logo, Notice } from "@/components/ui";
 
 // Temporary for testing: email + password sign-in. Email-link sign-in comes
 // back once email sending (Resend on our own domain) is set up.
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -29,8 +27,9 @@ export default function LoginPage() {
       setBusy(false);
       return;
     }
-    router.replace("/");
-    router.refresh();
+    // A full page load makes sure the new session cookie reaches the server
+    // (a client-side navigation can reuse a cached redirect to /login).
+    window.location.assign("/");
   }
 
   return (

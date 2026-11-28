@@ -31,7 +31,7 @@ You need free accounts on Supabase, Vercel and Resend, and access to add DNS rec
 ### 1. Supabase (database and sign-in)
 
 1. Create a project at supabase.com. Pick the region closest to the team.
-2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, `0002_…`, and so on). When a new file appears, run just that one.
+2. SQL Editor: run each file in `supabase/migrations/` in order (`0001_…`, `0002_…`, and so on; `0006_grants.sql` is safe to re-run any time). When a new file appears, run just that one.
 3. Project Settings > API: copy the **Project URL**, the **anon** key and the **service_role** key. Keep the service_role key secret.
 
 ### 2. Resend (email)

@@ -31,7 +31,7 @@ function rangeLabel(d: Delegation, today: string) {
 
 export default async function AccessPage() {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (!(profile.role === "manager" || profile.is_admin)) redirect(homeFor[profile.role]);
 
   const today = teamToday();

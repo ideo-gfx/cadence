@@ -6,7 +6,7 @@ import { AddProjectForm, ProjectRow } from "./forms";
 
 export default async function ProjectsPage() {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (!canEditProjects(profile)) redirect(homeFor[profile.role]);
 
   const supabase = await createClient();

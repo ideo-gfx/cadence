@@ -62,7 +62,7 @@ export default async function TeamPage({
   searchParams: Promise<{ date?: string; scope?: string; view?: string }>;
 }) {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   const reviewer = canReviewDays(profile);
   if (!reviewer && !profile.is_admin) redirect(homeFor[profile.role]);
 

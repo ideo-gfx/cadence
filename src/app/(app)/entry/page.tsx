@@ -22,6 +22,7 @@ type DayRow = {
   note: string;
   state: DayState;
   review_note: string;
+  review_tasks: { description: string; note: string }[] | null;
   tasks: {
     position: number;
     description: string;
@@ -47,7 +48,7 @@ export default async function EntryPage({ searchParams }: { searchParams: Promis
   const [{ data: dayData }, { data: recentData }, { data: projectData }, { data: managerData }] = await Promise.all([
     supabase
       .from("days")
-      .select("id, work_date, status, note, state, review_note, tasks(position, description, project_id, project_other, hours, status, blocker)")
+      .select("id, work_date, status, note, state, review_note, review_tasks, tasks(position, description, project_id, project_other, hours, status, blocker)")
       .eq("user_id", profile.id)
       .eq("work_date", date)
       .maybeSingle(),
@@ -80,6 +81,7 @@ export default async function EntryPage({ searchParams }: { searchParams: Promis
     note: day.note,
     state: day.state,
     reviewNote: day.review_note,
+    reviewTasks: day.review_tasks ?? [],
     tasks: [...day.tasks]
       .sort((a, b) => a.position - b.position)
       .map((t) => ({

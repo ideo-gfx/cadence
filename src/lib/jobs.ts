@@ -88,15 +88,22 @@ export async function remindManagers(db: SupabaseClient, today: string): Promise
   if (!isWorkingDay(today)) return skip(kind, today, "Not a working day.");
   if (!(await claim(db, today, kind))) return skip(kind, today, "Already sent.");
 
-  const [{ data: waiting }, { data: profiles }] = await Promise.all([
+  const [{ data: waiting }, { data: profiles }, { data: backups }] = await Promise.all([
     db.from("days").select("user_id").eq("state", "submitted"),
     db.from("profiles").select("id, email, manager_id, active"),
+    db.from("approval_delegates").select("manager_id, delegate_id").lte("starts_on", today).gte("ends_on", today),
   ]);
   const byId = new Map((profiles ?? []).map((p) => [p.id as string, p]));
+  // A manager's backup approver gets the same nudge while the backup is active.
+  const backupOf = new Map((backups ?? []).map((b) => [b.manager_id as string, b.delegate_id as string]));
   const countByManager = new Map<string, number>();
+  const bump = (id: string) => countByManager.set(id, (countByManager.get(id) ?? 0) + 1);
   for (const d of waiting ?? []) {
     const managerId = byId.get(d.user_id)?.manager_id as string | null;
-    if (managerId) countByManager.set(managerId, (countByManager.get(managerId) ?? 0) + 1);
+    if (!managerId) continue;
+    bump(managerId);
+    const backup = backupOf.get(managerId);
+    if (backup && backup !== d.user_id) bump(backup);
   }
 
   let sent = 0;

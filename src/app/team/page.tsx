@@ -141,7 +141,7 @@ export default async function TeamPage({
               href={`/team?date=${date}${s === "all" ? "&scope=all" : ""}`}
               className={cx(
                 "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                scope === s ? "bg-primary-light text-primary" : "text-fg-secondary hover:bg-hover hover:text-fg",
+                scope === s ? "bg-primary-light text-brand-fg" : "text-fg-secondary hover:bg-hover hover:text-fg",
               )}
             >
               {s === "mine" ? "My team" : "Everyone"}

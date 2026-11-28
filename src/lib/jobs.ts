@@ -53,7 +53,7 @@ export async function runDailyReport(db: SupabaseClient, today: string): Promise
 }
 
 const button = (href: string, label: string) =>
-  `<a href="${href}" style="display:inline-block;background:#bc4989;color:#fff;text-decoration:none;border-radius:8px;padding:10px 16px;font-family:Arial,sans-serif;font-size:14px">${esc(label)}</a>`;
+  `<a href="${href}" style="display:inline-block;background:#b92d63;color:#fff;text-decoration:none;border-radius:8px;padding:10px 16px;font-family:Arial,sans-serif;font-size:14px">${esc(label)}</a>`;
 
 const shell = (body: string) =>
   `<!doctype html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:24px 16px;background:#f7f7f5"><div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:24px;font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#171717">${body}</div></body></html>`;

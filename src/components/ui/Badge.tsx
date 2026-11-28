@@ -2,7 +2,7 @@ import { cx } from "./cx";
 
 const tones = {
   neutral: "bg-subtle text-fg-secondary",
-  primary: "bg-primary-light text-primary",
+  primary: "bg-primary-light text-brand-fg",
   secondary: "bg-secondary-light text-secondary",
   success: "bg-success/12 text-success",
 } as const;

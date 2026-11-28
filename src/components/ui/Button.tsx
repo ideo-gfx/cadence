@@ -26,9 +26,11 @@ export const buttonClass = ({
   fullWidth,
 }: Pick<ButtonProps, "variant" | "size" | "fullWidth"> = {}) =>
   cx(
-    "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg font-medium leading-tight transition-colors",
+    "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg font-medium leading-tight select-none",
+    // Quick, physical feedback on press, before any server reply.
+    "transition-[color,background-color,border-color,transform,opacity] duration-100 active:scale-[0.97]",
     "outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:pointer-events-none disabled:opacity-50",
+    "disabled:pointer-events-none disabled:opacity-50 aria-busy:cursor-progress",
     variants[variant],
     sizes[size],
     fullWidth && "w-full",

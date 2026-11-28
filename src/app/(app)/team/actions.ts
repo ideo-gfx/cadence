@@ -25,9 +25,17 @@ export async function approveDays(ids: string[]): Promise<ReviewResult> {
   return { ok: true, message: n === 1 ? "Approved." : `Approved ${n} days.` };
 }
 
-export async function returnDay(id: string, reason: string): Promise<ReviewResult> {
+export async function returnDay(
+  id: string,
+  reason: string,
+  taskNotes: { taskId: string; note: string }[] = [],
+): Promise<ReviewResult> {
   if (!reason.trim()) return { ok: false, message: "Say why you're sending it back." };
-  const error = await run("return_day", { p_id: id, p_reason: reason.trim() });
+  const error = await run("return_day", {
+    p_id: id,
+    p_reason: reason.trim(),
+    p_task_notes: taskNotes.map((t) => ({ task_id: t.taskId, note: t.note.trim() })),
+  });
   if (error) return { ok: false, message: error };
   revalidatePath("/team");
   return { ok: true, message: "Sent back." };

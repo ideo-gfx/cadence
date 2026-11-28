@@ -11,6 +11,7 @@ Stack: Next.js (App Router) · Supabase (Postgres + email sign-in) · Vercel · 
 - [x] Phase 3: Daily entry (run `supabase/migrations/0003_daily_entry.sql` in the Supabase SQL Editor)
 - [x] Phase 4: Manager approval (run `supabase/migrations/0004_approvals.sql`)
 - [x] Phase 5: Daily report email and reminders (run `supabase/migrations/0005_daily_report.sql`; see "Daily report" below)
+- [x] Phase 4b: Manager permissions, backup approvers, project leads and task review (run `supabase/migrations/0007_manager_permissions.sql`)
 - [ ] Phase 6: Pilot with the IDEO Graphics team
 - [ ] Phase 7: Leave tracking and insights
 

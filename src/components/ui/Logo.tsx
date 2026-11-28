@@ -27,7 +27,7 @@ export function RhythmMark({ className }: { className?: string }) {
   );
 }
 
-/** Horizontal logo: Rhythm mark and the Cadence wordmark in Space Grotesk Bold. */
+/** Horizontal logo: Rhythm mark and the Cadence wordmark in Geist Bold. */
 export function Logo({ className, markOnly }: { className?: string; markOnly?: boolean }) {
   return (
     <span

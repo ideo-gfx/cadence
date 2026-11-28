@@ -77,7 +77,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-space-grotesk), Arial, sans-serif;
+  --font-sans: var(--font-geist), Arial, sans-serif;
 
   --color-page: var(--surface-page);
   --color-surface: var(--surface-default);
@@ -142,10 +142,20 @@
 body {
   background: var(--surface-page);
   color: var(--text-primary);
-  font-family: var(--font-sans);
+  /* The font variable is set on <body> by next/font in layout.tsx. */
+  font-family: var(--font-geist), Arial, sans-serif;
   line-height: 1.6;
 }
 
 ::selection {
   background: var(--meld-primary-light);
+}
+
+/* Scrollable rows (like the header menu) that still scroll by swipe or
+   trackpad, without a visible scrollbar. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

@@ -6,7 +6,7 @@ import { dayStatusLabel, formatDay, formatHours } from "./workday";
 // Colours follow the Cadence brand kit: #17151b charcoal, #6d6670 muted, #b92d63 magenta.
 
 const C = { fg: "#17151b", muted: "#6d6670", line: "#e5dde5", accent: "#b92d63", danger: "#dc2626", subtle: "#f8f6f9" };
-const font = "font-family:'Space Grotesk',Arial,Helvetica,sans-serif;";
+const font = "font-family:Geist,Arial,Helvetica,sans-serif;";
 
 function section(title: string, body: string) {
   return `<p style="${font}margin:20px 0 6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:${C.muted}">${esc(title)}</p>${body}`;

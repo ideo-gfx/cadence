@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
-// Geist (trial): Vercel's interface typeface.
+// Geist: a neutral interface typeface, chosen over Space Grotesk for an enterprise feel.
 const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],

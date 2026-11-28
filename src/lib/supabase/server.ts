@@ -32,16 +32,33 @@ export async function createClient() {
   );
 }
 
-/** Signed-in user's profile, or null when signed out. */
-export async function getProfile(): Promise<Profile | null> {
+export type Account =
+  | { state: "signed-out" }
+  | { state: "ok"; profile: Profile }
+  | { state: "no-profile" | "inactive" | "error"; email: string; detail?: string };
+
+/** Who is signed in, and whether they have a usable Cadence profile. */
+export async function getAccount(): Promise<Account> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-  const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  const profile = (data as Profile) ?? null;
-  // Deactivated people are treated as signed out.
-  if (profile && profile.active === false) return null;
-  return profile;
+  if (!user) return { state: "signed-out" };
+  const email = user.email ?? "";
+  const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+  if (error) {
+    console.error("Profile lookup failed:", error.message);
+    return { state: "error", email, detail: error.message };
+  }
+  if (!data) return { state: "no-profile", email };
+  const profile = data as Profile;
+  // Deactivated people can't use the app.
+  if (profile.active === false) return { state: "inactive", email };
+  return { state: "ok", profile };
+}
+
+/** Signed-in user's usable profile, or null. */
+export async function getProfile(): Promise<Profile | null> {
+  const account = await getAccount();
+  return account.state === "ok" ? account.profile : null;
 }
 
 export const homeFor: Record<Role, string> = {

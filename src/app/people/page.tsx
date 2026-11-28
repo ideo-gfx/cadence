@@ -6,7 +6,7 @@ import { AddPersonForm, PersonRow } from "./forms";
 
 export default async function PeoplePage() {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (!profile.is_admin) redirect(homeFor[profile.role]);
 
   const supabase = await createClient();

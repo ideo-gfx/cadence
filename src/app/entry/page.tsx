@@ -35,7 +35,7 @@ type DayRow = {
 
 export default async function EntryPage({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (profile.role === "executive") redirect("/reports");
 
   const today = teamToday();
